@@ -5,8 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-
 import android.Manifest;
+import android.app.Notification;
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
 import com.example.technicalmaptasks.R;
 import com.example.technicalmaptasks.utils.GetNearbyPlacesData;
 import com.google.android.gms.common.ConnectionResult;
@@ -25,6 +24,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -41,7 +41,6 @@ public class PlacesMapsActivity extends FragmentActivity implements OnMapReadyCa
 
     private GoogleMap mMap;
 
-
     private GoogleApiClient client;
     private LocationRequest locationRequest;
     private Location lastlocation;
@@ -53,7 +52,7 @@ public class PlacesMapsActivity extends FragmentActivity implements OnMapReadyCa
 
   private  String mapTilerKey="NDgwMjo2WkgzUkE3N1dP";
 
-  private  String styleUrl  = "https://api.maptiler.com/maps/streets-v2/style.json?key=${mapTilerKey}";
+  private  String styleUrl  = "https://api.maptiler.com/maps/streets-v2/style.json?key={"+mapTilerKey+"}";
 
   private ProgressDialog progressDialog;
 
@@ -72,7 +71,7 @@ public class PlacesMapsActivity extends FragmentActivity implements OnMapReadyCa
         progressDialog.setTitle("please wait");
         progressDialog.show();
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+      SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.placemap);
         mapFragment.getMapAsync(this);
     }
@@ -118,6 +117,9 @@ public class PlacesMapsActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(
+                        this, R.raw.mapstyle));
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             bulidGoogleApiClient();
@@ -217,4 +219,6 @@ public class PlacesMapsActivity extends FragmentActivity implements OnMapReadyCa
 
 
     }
+
+
 }
